@@ -39,19 +39,28 @@ const Pacespeedcalculator = () => {
     
 
   return (
-    <View style={styles.container}>
-        <Pace hours={hours} minutes={minutes} seconds={seconds} milliseconds={milliseconds} />
-        <SpeedSlider speed={speed} setSpeed={setSpeed}/>
-        <Text>Some text</Text>
+  <View style={styles.pacespeedpage}>
+    <Pace hours={hours} minutes={minutes} seconds={seconds} milliseconds={milliseconds} />
+    <View style={styles.bottomGroup}>
+      <SpeedSlider speed={speed} setSpeed={setSpeed}/>
     </View>
+  </View>
   )
 }
 
 export default Pacespeedcalculator
 
 const styles = StyleSheet.create({
-  container: {
+  pacespeedpage: {
     flex: 1,
+    justifyContent: 'flex-end',
     alignItems: 'center',
-  }
-})
+    backgroundColor: 'cyan',
+    paddingBottom: 60 // Optional: adds space at top and bottom
+  },
+  bottomGroup: {
+    alignItems: 'center',
+    width: '100%',
+    gap: 50, // Or use marginTop on Text if gap is not supported
+  },
+});

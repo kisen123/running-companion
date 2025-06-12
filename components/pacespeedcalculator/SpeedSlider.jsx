@@ -17,10 +17,13 @@ const SpeedSlider = ({ speed, setSpeed }) => {
         minimumTrackTintColor='tomato'
         maximumTrackTintColor='#000'
         thumbTintColor='tomato'
-        step={.5}
+        step={.1}
         onValueChange={(val) => {
-          setSpeed(val); 
+          const roundedVal = Number(val.toFixed(1)); // Round to one decimal place
+          setSpeed(roundedVal); 
         }}
+        trackStyle={{ height: 16, borderRadius: 8 }} // Add this line for thicker track
+        thumbStyle={{ height: 32, width: 32, borderRadius: 16 }} // Add this for a bigger thumb
 
       />
 
@@ -32,13 +35,12 @@ const SpeedSlider = ({ speed, setSpeed }) => {
 const styles = StyleSheet.create({
 
   container: {
-    flex: 1,
     alignItems: 'center',
     backgroundColor: '#ffffff',
   },
 
   speedStyle: {
-    fontSize: 20,
+    fontSize: 50,
     color: '#333',
     marginBottom: 20,
   },
