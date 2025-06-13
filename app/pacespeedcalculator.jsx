@@ -1,14 +1,16 @@
 // Import necessary libraries
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, TextInput, View, Button } from 'react-native';
 import React from 'react';
 
 // Import components
 import SpeedSlider from '../components/pacespeedcalculator/SpeedSlider';
 import Pace from '../components/pacespeedcalculator/Pace';
-
+import ProjectedTime from '../components/pacespeedcalculator/ProjectedTime';
+import Distance from '../components/pacespeedcalculator/Distance.jsx';
 
 // Import utils
 import { calculatePace } from '../utils/calculations.js';
+import RequestedDistance from '../components/pacespeedcalculator/RequestedDistance.jsx';
 
 const Pacespeedcalculator = () => {
 
@@ -37,14 +39,25 @@ const Pacespeedcalculator = () => {
 
   }, [speed]);
     
+  const requestedDistance = 42.195; // Marathon distance in km
 
   return (
   <View style={styles.pacespeedpage}>
+
+    <View style={styles.projectedTimeSection}>
+
+      <RequestedDistance speed={speed} requestedDistance={requestedDistance} />
+      <RequestedDistance speed={speed} requestedDistance={requestedDistance} />
+
+    </View>
+
+
     <Pace hours={hours} minutes={minutes} seconds={seconds} milliseconds={milliseconds} />
     <View style={styles.bottomGroup}>
       <SpeedSlider speed={speed} setSpeed={setSpeed}/>
     </View>
   </View>
+  
   )
 }
 
@@ -63,4 +76,10 @@ const styles = StyleSheet.create({
     width: '100%',
     gap: 50, // Or use marginTop on Text if gap is not supported
   },
+  projectedTimeSection: {
+    //flexDirection: 'column',
+    //alignItems: 'center',
+    marginBottom: 20,
+    gap: 20
+  }
 });

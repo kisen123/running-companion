@@ -51,4 +51,63 @@ export function calculatePace(inputValue) {
 
 
     return {hours, minutes, seconds, milliseconds}
-};
+}
+
+
+
+// Function to calculate average projected time for a given speed and distance
+// Function written from an earlier project, adapted for this project
+export function calculateAvgProjectedTime(speed, kmDistance) {
+
+    let rawConvertedMinutesAvgProjected;
+
+    // Rewriting the km values to integers
+
+
+    // Defining minutes and seconds
+    if (speed === 0) {
+        rawConvertedMinutesAvgProjected = 0;
+    } else {
+    rawConvertedMinutesAvgProjected = (kmDistance / speed) * 60;
+    }
+
+
+    // rawConvertedMinutesAvgProjected is used for every calculation
+    // of hours-minutes-seconds.
+    let hours = Math.floor(rawConvertedMinutesAvgProjected / 60);
+    let minutes;
+    if (hours <= 0) {
+        minutes = Math.floor(rawConvertedMinutesAvgProjected);
+    } else {
+        minutes = Math.floor(((rawConvertedMinutesAvgProjected / 60) % 1) * 60, 2)
+    };
+    let seconds = Math.floor(((((rawConvertedMinutesAvgProjected / 60) % 1) * 60) % 1) * 60);
+    let milliseconds = Math.round(((((rawConvertedMinutesAvgProjected / 60) % 1 * 60) % 1 * 60) % 1 ) * 1000)
+
+
+    // Handles situations where the rounding
+    // protocol gives f.ex 04:59:1000 instead of 05:00:000
+    if (milliseconds === 1000) {
+        seconds = seconds + 1;
+        milliseconds = 0;
+    }
+
+
+    // Handles situations where the rounding
+    // protocol gives f.ex 04:60 instead of 05:00
+    if (seconds === 60) {
+        minutes = minutes + 1;
+        seconds = 0;
+    }
+
+    // Handles situations where the rounding
+    // protocol gives f.ex. 00:60:00 instead of 01:00:00
+    if (minutes === 60) {
+        hours = hours + 1;
+        minutes = 0;
+    }
+
+    
+
+    return {hours, minutes, seconds, milliseconds}
+}
