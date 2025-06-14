@@ -24,7 +24,9 @@ const Pacespeedcalculator = () => {
   // Initializing state variable for speed
   const [speed, setSpeed] = React.useState(0);
 
-  const [distances, setDistances] = React.useState([]);
+  const [distances, setDistances] = React.useState([
+    { id: 0, requestedDistance: 42.195 }
+  ]);
 
   const [requestedDistance, setRequestedDistance] = React.useState(42.195); // Default marathon distance in km
 
@@ -36,8 +38,13 @@ const Pacespeedcalculator = () => {
 
   const handlePressOut = () => {
 
-    setDistances(prev => [...prev, <RequestedDistance key={prev.length} speed={speed} setSpeed={setSpeed} requestedDistance={requestedDistance} setRequestedDistance={setRequestedDistance}/>])
-  }
+    setDistances(prev => [
+      ...prev,
+      { id: prev.length, requestedDistance: 5 }
+
+    ]);
+  };
+  
 
   // Using calculateSpeed utility function to convert pace to speed
   React.useEffect(() => {
@@ -56,7 +63,20 @@ const Pacespeedcalculator = () => {
   <View style={styles.pacespeedpage}>
 
     <View style={styles.projectedTimeSection}>
-      {distances.map((distanceComponent) => distanceComponent)}
+      {distances.map(distance => (
+        <RequestedDistance
+          key={distance.id}
+          speed={speed}
+          requestedDistance={distance.requestedDistance}
+          onChange={val => {
+            setDistances(prev => 
+              prev.map(d => 
+                d.id === distance.id ? { ...d, requestedDistance: parseFloat(val) || 0 } : d
+              )
+            );
+          }}
+        />
+      ))}
     </View>
 
     <View style={styles.addDistancesButtonContainer}>

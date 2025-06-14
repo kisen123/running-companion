@@ -4,14 +4,14 @@ import React from 'react'
 import Distance from './Distance'
 import ProjectedTime from './ProjectedTime'
 
-const RequestedDistance = ({ speed, setSpeed, requestedDistance, setRequestedDistance }) => {
+const RequestedDistance = ({ speed, requestedDistance, onChange }) => {
 
   
 
   return (
     <View>
-      <Distance kmDistance={requestedDistance} onChangeText={setRequestedDistance} />
-      <ProjectedTime speed={speed} setSpeed={setSpeed} kmDistance={requestedDistance} />
+      <Distance kmDistance={requestedDistance} onChange={onChange} />
+      <ProjectedTime speed={speed} kmDistance={requestedDistance} />
     </View>
   )
 }
