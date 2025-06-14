@@ -4,12 +4,8 @@ import { calculateAvgProjectedTime } from '../../utils/calculations'
 
 const ProjectedTime = ({ speed, kmDistance }) => {
 
-    
   const {hours, minutes, seconds, milliseconds} = calculateAvgProjectedTime(speed, kmDistance);
-
-
-
-
+    
   return (
     <View style={styles.projectedTimeContainer}>
       <Text>{hours}</Text>
@@ -21,6 +17,12 @@ const ProjectedTime = ({ speed, kmDistance }) => {
       <Text>{milliseconds}</Text>
     </View>
   )
+    
+
+
+
+
+
 }
 
 export default ProjectedTime

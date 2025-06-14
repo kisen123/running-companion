@@ -1,12 +1,10 @@
 // Import necessary libraries
-import { StyleSheet, Text, TextInput, View, Button } from 'react-native';
+import { StyleSheet, Text, TextInput, View, Button, Pressable } from 'react-native';
 import React from 'react';
 
 // Import components
 import SpeedSlider from '../components/pacespeedcalculator/SpeedSlider';
 import Pace from '../components/pacespeedcalculator/Pace';
-import ProjectedTime from '../components/pacespeedcalculator/ProjectedTime';
-import Distance from '../components/pacespeedcalculator/Distance.jsx';
 
 // Import utils
 import { calculatePace } from '../utils/calculations.js';
@@ -26,6 +24,20 @@ const Pacespeedcalculator = () => {
   // Initializing state variable for speed
   const [speed, setSpeed] = React.useState(0);
 
+  const [distances, setDistances] = React.useState([]);
+
+  const [requestedDistance, setRequestedDistance] = React.useState(42.195); // Default marathon distance in km
+
+
+  const handlePressIn = (props) => {
+    // This function can be used to handle the end of a press event if needed
+    // For now, it does nothing
+  }
+
+  const handlePressOut = () => {
+
+    setDistances(prev => [...prev, <RequestedDistance key={prev.length} speed={speed} setSpeed={setSpeed} requestedDistance={requestedDistance} setRequestedDistance={setRequestedDistance}/>])
+  }
 
   // Using calculateSpeed utility function to convert pace to speed
   React.useEffect(() => {
@@ -38,17 +50,19 @@ const Pacespeedcalculator = () => {
     setMilliseconds(calculatedSpeed.milliseconds.toString().padStart(3, '0'));
 
   }, [speed]);
-    
-  const requestedDistance = 42.195; // Marathon distance in km
+
 
   return (
   <View style={styles.pacespeedpage}>
 
     <View style={styles.projectedTimeSection}>
+      {distances.map((distanceComponent) => distanceComponent)}
+    </View>
 
-      <RequestedDistance speed={speed} requestedDistance={requestedDistance} />
-      <RequestedDistance speed={speed} requestedDistance={requestedDistance} />
-
+    <View style={styles.addDistancesButtonContainer}>
+      <Pressable style={({ pressed }) => [styles.addDistancesButton, pressed && styles.addDistancesButtonPressed]} onPressIn={handlePressIn} onPressOut={handlePressOut}>
+        <Text style={styles.addDistancesButtonText}>+ Add distance</Text>
+      </Pressable>
     </View>
 
 
@@ -68,7 +82,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'center',
-    backgroundColor: 'cyan',
+    //backgroundColor: 'cyan',
     paddingBottom: 60 // Optional: adds space at top and bottom
   },
   bottomGroup: {
@@ -79,7 +93,35 @@ const styles = StyleSheet.create({
   projectedTimeSection: {
     //flexDirection: 'column',
     //alignItems: 'center',
-    marginBottom: 20,
-    gap: 20
+    marginBottom: 80,
+    gap: 20,
+    backgroundColor: 'red',
+  },
+
+  addDistancesButtonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    width: '100%',
+    paddingRight: 5,
+  },
+
+  addDistancesButton: {
+    backgroundColor: 'lightgray',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 25,
+    elevation: 6,
+    overflow: 'hidden'
+  },
+
+  addDistancesButtonPressed: {
+    backgroundColor: 'darkgray',
+    elevation: 3
+  },
+
+  addDistancesButtonText: {
+    fontSize: 20,
+    fontWeight: '900',
+    lineHeight: 56
   }
 });

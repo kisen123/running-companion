@@ -1,10 +1,10 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View, TextInput } from 'react-native'
 import React from 'react'
 
-const Distance = ({ kmDistance }) => {
+const Distance = ({ kmDistance, onChangeText }) => {
   return (
     <View style={styles.distanceStyles}>
-      <Text style={styles.distanceText}>{kmDistance}</Text>
+      <TextInput style={styles.distanceText} keyboardType="numeric" onChangeText={onChangeText(kmDistance)}>{kmDistance}</TextInput>
       <Text style={styles.distanceUnit}> km</Text>
     </View>
   )
