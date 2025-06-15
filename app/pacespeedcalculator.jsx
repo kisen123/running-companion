@@ -40,7 +40,7 @@ const Pacespeedcalculator = () => {
 
     setDistances(prev => [
       ...prev,
-      { id: prev.length, requestedDistance: "5" }
+      { id: prev.length, requestedDistance: "42.195" }
 
     ]);
   };
@@ -75,6 +75,9 @@ const Pacespeedcalculator = () => {
               )
             );
           }}
+          onRemove={() => {
+            setDistances(prev => prev.filter(d => d.id !== distance.id));
+          }}
         />
       ))}
     </View>
@@ -102,7 +105,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'center',
-    //backgroundColor: 'cyan',
+    backgroundColor: 'white',
     paddingBottom: 60 // Optional: adds space at top and bottom
   },
   bottomGroup: {
@@ -115,7 +118,7 @@ const styles = StyleSheet.create({
     //alignItems: 'center',
     marginBottom: 80,
     gap: 20,
-    backgroundColor: 'lightgray',
+
   },
 
   addDistancesButtonContainer: {
