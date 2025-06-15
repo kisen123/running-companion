@@ -3,12 +3,12 @@ import { StyleSheet, Text, TextInput, View, Button, Pressable } from 'react-nati
 import React from 'react';
 
 // Import components
-import SpeedSlider from '../components/pacespeedcalculator/SpeedSlider';
-import Pace from '../components/pacespeedcalculator/Pace';
+import SpeedSlider from '../../components/pacespeedcalculator/SpeedSlider.jsx';
+import Pace from '../../components/pacespeedcalculator/Pace.jsx';
 
 // Import utils
-import { calculatePace } from '../utils/calculations.js';
-import RequestedDistance from '../components/pacespeedcalculator/RequestedDistance.jsx';
+import { calculatePace } from '../../utils/calculations.js';
+import RequestedDistance from '../../components/pacespeedcalculator/RequestedDistance.jsx';
 
 const Pacespeedcalculator = () => {
 

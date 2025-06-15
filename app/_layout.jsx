@@ -1,12 +1,16 @@
-import { Slot } from 'expo-router'
+import { Stack } from 'expo-router'
 import { StyleSheet, Text, View } from 'react-native'
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+
+const Tab = createBottomTabNavigator();
 
 const RootLayout = () => {
   return (
-    <View style={styles.container}>
-      <Slot />
-      <Text style={styles.footer}>Made by Kristian M Lian</Text>
-    </View>
+    
+      <Stack>
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }}/>
+      </Stack>
+    
   )
 }
 

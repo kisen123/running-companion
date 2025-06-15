@@ -1,25 +1,15 @@
 import { StyleSheet, Text, View, Image } from 'react-native';
 
-import { Link } from 'expo-router';
+import { Link, Redirect } from 'expo-router';
  
 import Logo from '../assets/img/runner-icon.png';
 
 const Home = () => {
+  
   return (
-    <View style={styles.container}>
-      <Image source={Logo} style={styles.img} />
-
-      <Text style={styles.title}>Running Companion v1.0</Text>
-
-      <Text style={styles.text}>Welcome to the app!</Text>
-
-      <Link href="/about" style={styles.link} >About page</Link>
-      <Link href="/contact" style={styles.link} >Contact</Link>
-
-      <Link href="/pacespeedcalculator" style={[styles.link, {marginTop: 100}]}>Pace/Speed Calculator</Link>
-      <Link href="/clotheschooser" style={[styles.link]}>Clothes suggestions engine</Link>
-    </View>
-  );
+    <Redirect href="/home"/>
+  )
+  
 }
 
 export default Home;
