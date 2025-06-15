@@ -2,9 +2,10 @@
 ### Pace/Speed calculator
 The pace/speed calculator looks like this currently. 
 
-Super ugly UI, the UX has been the primary focus. Here is a screenshot of the pace/speed calculator as of 15th of June 2025. Subject to change in the future :D
+Super ugly UI, the UX has been the primary focus. Here are some screenshots of the pace/speed calculator as of 15th of June 2025. Subject to change in the future :D
 <!--![Pace/Speed calculator](assets/project_screenshots/pace_speed_calculator/screenshot_15062025.jpg) -->
-<img src="assets/project_screenshots/pace_speed_calculator/screenshot_15062025.jpg" alt="Pace/Speed calculator" width="200"/>
+<img src="assets/project_screenshots/pace_speed_calculator/screenshot_15062025_1.jpg" alt="Pace/Speed calculator" width="200"/>
+<img src="assets/project_screenshots/pace_speed_calculator/screenshot_15062025_2.jpg" alt="Pace/Speed calculator" width="200"/>
 
 
 ### About the project
