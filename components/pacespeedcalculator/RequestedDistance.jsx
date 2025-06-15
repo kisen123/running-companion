@@ -10,7 +10,7 @@ const RequestedDistance = ({ speed, requestedDistance, onChange }) => {
   return (
     <View>
       <Distance kmDistance={requestedDistance} onChange={onChange} />
-      <ProjectedTime speed={speed} kmDistance={requestedDistance} />
+      <ProjectedTime speed={speed} kmDistance={parseFloat(requestedDistance)} />
     </View>
   )
 }

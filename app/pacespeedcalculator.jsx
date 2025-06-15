@@ -40,7 +40,7 @@ const Pacespeedcalculator = () => {
 
     setDistances(prev => [
       ...prev,
-      { id: prev.length, requestedDistance: 5 }
+      { id: prev.length, requestedDistance: "5" }
 
     ]);
   };
