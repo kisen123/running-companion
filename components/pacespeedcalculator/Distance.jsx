@@ -4,7 +4,7 @@ import React from 'react'
 const Distance = ({ kmDistance, onChange }) => {
   return (
     <View style={styles.distanceStyles}>
-      <TextInput style={styles.distanceText} keyboardType="numeric" onChange={onChange} value={kmDistance}></TextInput>
+      <TextInput style={styles.distanceText} keyboardType="numeric" onChangeText={onChange} value={kmDistance}></TextInput>
       <Text style={styles.distanceUnit}> km</Text>
     </View>
   )

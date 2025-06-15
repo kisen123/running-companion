@@ -25,10 +25,10 @@ const Pacespeedcalculator = () => {
   const [speed, setSpeed] = React.useState(0);
 
   const [distances, setDistances] = React.useState([
-    { id: 0, requestedDistance: 42.195 }
+    // { id: 0, requestedDistance: 42.195 }
   ]);
 
-  const [requestedDistance, setRequestedDistance] = React.useState(42.195); // Default marathon distance in km
+  const [requestedDistance, setRequestedDistance] = React.useState(0); // Default marathon distance in km
 
 
   const handlePressIn = (props) => {
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
     //alignItems: 'center',
     marginBottom: 80,
     gap: 20,
-    backgroundColor: 'red',
+    backgroundColor: 'lightgray',
   },
 
   addDistancesButtonContainer: {

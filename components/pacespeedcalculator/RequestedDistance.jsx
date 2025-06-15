@@ -6,7 +6,6 @@ import ProjectedTime from './ProjectedTime'
 
 const RequestedDistance = ({ speed, requestedDistance, onChange }) => {
 
-  
 
   return (
     <View>
