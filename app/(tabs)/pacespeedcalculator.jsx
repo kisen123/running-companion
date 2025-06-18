@@ -28,8 +28,6 @@ const Pacespeedcalculator = () => {
     // { id: 0, requestedDistance: 42.195 }
   ]);
 
-  const [requestedDistance, setRequestedDistance] = React.useState(0); // Default marathon distance in km
-
 
   const handlePressIn = (props) => {
     // This function can be used to handle the end of a press event if needed
