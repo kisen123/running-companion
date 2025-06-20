@@ -11,16 +11,49 @@ const Clotheschooser = () => {
   const fetch_clothes = async (category) => {
 
     try {
-      const image_api_response = await axios.get(`http://${computer_LAN_IP}:${hosting_port}/api/images/${category}`)
-      return image_api_response
+      const response = await axios.get(`http://${computer_LAN_IP}:${hosting_port}/api/images/${category}`);
+      return response;
     } catch (error) {
       console.error('Error fetching image URLs', error);
       return null;
     }
 
-    
+  }
+
+
+
+  const fetch_clothes_categories = async () => {
+
+    try {
+      const response = await axios.get(`http://${computer_LAN_IP}:${hosting_port}/api/images/categories`);
+      return response;
+    } catch (error) {
+      console.error('Error fetching image categories', error);
+      return null;
+    }
 
   }
+
+  const add_training_data = async (selectedImages) => {
+
+    try {
+      const response = await axios.post(`http://${computer_LAN_IP}:${hosting_port}/api/training_data`, { training_data: selectedImages });
+      console.log('Data sent successfully: ', response.data)
+      return response;
+    } catch (error) {
+      console.error('Error adding training data', error);
+      return null;
+    }
+
+  }
+
+
+
+  // TODO: WRITE THIS METHOD
+  //const fetch_all_clothes = async () => {}
+
+
+
 
   const handlePressOut = async (props) => {
 
@@ -31,22 +64,31 @@ const Clotheschooser = () => {
     // TODO: Implement the logic to handle the press out event
     // This function will send of the selected images to the backend 
 
-    axios.post(`http://${computer_LAN_IP}:${hosting_port}/api/training_data`, {
-      training_data: selectedImages,
-    }
-    ).then(response => {
-      console.log('Data sent successfully:', response.data);
-    }
-    ).catch(error => {
-      console.error('Error sending data to backend: ', error);
-    })
+    add_training_data(selectedImages);
+
+    const clothes_categories = fetch_clothes_categories().then(clothes_categories => {
+      console.log(clothes_categories.data)
+    });
+
+    
 
 
-    const image_api_response = fetch_clothes('running_jackets').then(image_api_response => {
+    const clothes_data = fetch_clothes('running_jackets').then(image_api_response => {
       console.log(image_api_response.data)
     })
 
+    
 
+
+    // TODO
+    // Write code to fetch all URIs for the clothes in the back end
+    // const all_clothes_data = fetch_all_clothes();
+
+
+
+
+
+    
     // Resetting the selected images to null for all categories
     setSelectedImages({
       'Hats': null,
