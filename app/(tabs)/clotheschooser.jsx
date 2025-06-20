@@ -8,6 +8,20 @@ import ClothesPerCategory from '../../components/clotheschooser/ClothesPerCatego
 
 const Clotheschooser = () => {
 
+  const fetch_clothes = async (category) => {
+
+    try {
+      const image_api_response = await axios.get(`http://${computer_LAN_IP}:${hosting_port}/api/images/${category}`)
+      return image_api_response
+    } catch (error) {
+      console.error('Error fetching image URLs', error);
+      return null;
+    }
+
+    
+
+  }
+
   const handlePressOut = async (props) => {
 
     try {
@@ -17,7 +31,7 @@ const Clotheschooser = () => {
     // TODO: Implement the logic to handle the press out event
     // This function will send of the selected images to the backend 
 
-    axios.post(`http://${computer_LAN_IP}:${hosting_port}/training_data`, {
+    axios.post(`http://${computer_LAN_IP}:${hosting_port}/api/training_data`, {
       training_data: selectedImages,
     }
     ).then(response => {
@@ -27,6 +41,10 @@ const Clotheschooser = () => {
       console.error('Error sending data to backend: ', error);
     })
 
+
+    const image_api_response = fetch_clothes('running_jackets').then(image_api_response => {
+      console.log(image_api_response.data)
+    })
 
 
     // Resetting the selected images to null for all categories
