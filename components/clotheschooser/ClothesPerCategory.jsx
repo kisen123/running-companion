@@ -2,16 +2,21 @@ import React from 'react';
 import { FlatList, Image, StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 
 const ClothesPerCategory = ({ categoryName, images, selectedImageId, onSelectImage }) => {
-  const renderItem = ({ item }) => (
+
+  console.log("ClothesPerCategory rendered")
+  const renderItem = ({ item }) => {
+    
+    console.log(item.image_url)
+    return (
     <TouchableOpacity
-      onPress={() => onSelectImage(categoryName, item.id)}
+      onPress={() => onSelectImage(categoryName, item.image_id)}
       style={styles.itemContainer}
       activeOpacity={0.8}
       >
 
       <View style={styles.imageWrapper}>
-      <Image source={ item.source } style={styles.image} />
-      { selectedImageId === item.id && (
+      <Image source={{ uri: item.image_url }} style={styles.image} />
+      { selectedImageId === item.image_id && (
         <View style={styles.selectedCircle}>
           <Text style={styles.selectedText}>✔</Text>
         </View>
@@ -19,18 +24,21 @@ const ClothesPerCategory = ({ categoryName, images, selectedImageId, onSelectIma
           
         </View>
     </TouchableOpacity>
-  );
+  )};
 
   return (
     <View>
       <Text style={styles.categoryText}>{categoryName}</Text>
         <FlatList
           data={images}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.image_id}
           contentContainerStyle={styles.flatListImages}
           renderItem={renderItem}
           horizontal={true}
           showsHorizontalScrollIndicator={false}
+          maxToRenderPerBatch={5}
+          windowSize={5}
+          initialNumToRender={5}
         />
     </View>
   );
