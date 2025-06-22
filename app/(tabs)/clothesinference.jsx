@@ -1,12 +1,12 @@
 import { Pressable, ScrollView, StyleSheet, Text, View, Animated } from 'react-native';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { computer_LAN_IP, hosting_port } from '@env';
 
-import CurrentWeather, { getRandomWeather } from '../../components/clotheschooser/CurrentWeather.jsx'; // Adjust the import path as necessary
+import CurrentWeatherInference, { getRandomWeather } from '../../components/clothesinference/CurrentWeatherInference.jsx'; // Adjust the import path as necessary
 import ClothesPerCategory from '../../components/clotheschooser/ClothesPerCategory.jsx'; // Adjust the import path as necessary}
 
-const Clotheschooser = () => {
+const Clothesinference = () => {
 
   
 
@@ -36,56 +36,66 @@ const Clotheschooser = () => {
 
   }
 
-  const add_training_data = async (selectedImages, weather) => {
+  // Simple helper to convert "None" strings to null in a flat object
+  function convert_none_to_null(obj) {
+    const result = {};
+    for (const [key, value] of Object.entries(obj)) {
+        result[key] = value === "None" ? null : value;
+    }
+    return result;
+  }
+
+  const train_ml_model = async () => {
+
+    try {
+        const response = await axios.get(`http://${computer_LAN_IP}:${hosting_port}/api/train_model`)
+        return response.data
+    } catch (error) {
+        console.error('Error training the model in the back-end', error);
+    }
+
+
+  }
+
+  const inference_ml_model = async (setSelectedImagesReal) => {
 
     try {
 
-      // Constructing the training data payload
-      const training_data_payload = {
-        "training_data": { "features": weather, "labels": selectedImages }
-      }
+        const response = await axios.post(`http://${computer_LAN_IP}:${hosting_port}/api/inference_model`, { weather, clothesCategories })
+        //const None_to_null = response.data.predictions.map()
+        setSelectedImagesReal(convert_none_to_null(response.data.predictions))
 
-      const response = await axios.post(`http://${computer_LAN_IP}:${hosting_port}/api/training_data`, training_data_payload);
-      console.log('Data sent successfully: ', response.data)
-      return response;
+        return response.data.predictions
     } catch (error) {
-      console.error('Error adding training data', error);
-      return null;
+        console.error('Error training the model in the back-end', error);
+    }
+
+
+  }
+
+  const handlePressOutTrainModel = async (props) => {
+
+    try {
+
+      // TODO
+      // Write call to backend to train the model that is there.
+      train_ml_model()
+
+    } catch (error) {
+        console.error('Error training the model in the backend', error)
     }
 
   }
 
-
-  const handlePressOut = async (props) => {
+  const handlePressOutInference = async (props) => {
 
     try {
-      // Show "+1" animation
-      setShowPlusOne(true);
-      plusOneAnim.setValue(0);
-      Animated.timing(plusOneAnim, {
-        toValue: 1,
-        duration: 900,
-        useNativeDriver: true,
-      }).start(() => {
-        setShowPlusOne(false);
-      });
     
-    // Sends of training data to the backend
-    add_training_data(selectedImagesReal, weather);
+      // TODO
+      // Write call to backend to perform inference of decision tree model.
+      inference_ml_model(setSelectedImagesReal)
 
-    // Resets the selected images and weather
-    // TODO: Collect this information model from the back end in a future version
-    setSelectedImagesReal({
-      'Gloves': null,
-      'Hats': null,
-      'Leggings': null,
-      'Running jackets': null,
-      'Shoes': null,
-      'Snoods': null,
-      'Upper bodies': null
-    });
-    setWeather(getRandomWeather());
-    
+      // Need to write logic for what images to show
 
     } 
     catch (error) {
@@ -111,12 +121,10 @@ const Clotheschooser = () => {
     'Upper bodies': null
   });
 
-  
+
+
   const [weather, setWeather] = React.useState(getRandomWeather());
 
-  // Animation state for "+1"
-  const plusOneAnim = useRef(new Animated.Value(0)).current; // 0: hidden, 1: visible
-  const [showPlusOne, setShowPlusOne] = useState(false);
 
   //
   //
@@ -159,7 +167,7 @@ const Clotheschooser = () => {
   return (
     <View style={styles.clothesChooserWrapper}>
 
-      <CurrentWeather weather={weather} setWeather={setWeather} />
+      <CurrentWeatherInference weather={weather} setWeather={setWeather} />
 
       <ScrollView  showsHorizontalScrollIndicator={false} contentContainerStyle= {{ paddingBottom: 140 }}>
 
@@ -182,33 +190,13 @@ const Clotheschooser = () => {
       </ScrollView>
       
 
-      <View style={styles.addTrainingDataButtonContainer}>
-        {showPlusOne && (
-          <Animated.View
-            style={[
-              styles.plusOneContainer,
-              {
-                opacity: plusOneAnim.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [1, 0],
-                }),
-                transform: [
-                  {
-                    translateY: plusOneAnim.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [0, -40], // Slide up 40px
-                    }),
-                  },
-                ],
-              },
-            ]}
-            pointerEvents="none"
-          >
-            <Text style={styles.plusOneText}>+1</Text>
-          </Animated.View>
-        )}
-        <Pressable style={({ pressed }) => [styles.addTrainingDataButton, pressed && styles.addTrainingDataButtonPressed]} onPressOut={handlePressOut} title="Button title">
-          <Text style={styles.addTrainingDataButtonText}>Add training data</Text>
+      <View style={styles.buttonsContainer}>
+        <Pressable style={({ pressed }) => [styles.trainModelButton, pressed && styles.trainModelButtonPressed]} onPressOut={handlePressOutTrainModel} title="Button title">
+          <Text style={styles.buttonText}>Train model</Text>
+        </Pressable>
+
+        <Pressable style={({ pressed }) => [styles.suggestClothesButton, pressed && styles.suggestClothesButtonPressed]} onPressOut={handlePressOutInference} title="Button title">
+          <Text style={styles.buttonText}>Suggest clothes</Text>
         </Pressable>
 
       </View>
@@ -217,7 +205,7 @@ const Clotheschooser = () => {
   )
 }
 
-export default Clotheschooser
+export default Clothesinference
 
 const styles = StyleSheet.create({
 
@@ -225,7 +213,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'blue',
   },
 
-  addTrainingDataButtonContainer: {
+  buttonsContainer: {
     position: 'absolute',
     left: 0,
     right: 0,
@@ -233,7 +221,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 60,
   },
 
-  addTrainingDataButton:{
+  suggestClothesButton:{
     backgroundColor: '#99ddff',
     marginBottom: 20,
     borderRadius: 20,
@@ -243,12 +231,29 @@ const styles = StyleSheet.create({
     paddingTop: 10
   },
 
-  addTrainingDataButtonPressed:{
+  suggestClothesButtonPressed:{
     backgroundColor: '#66bbff',
     elevation: 1
   },
 
-  addTrainingDataButtonText: {
+  trainModelButton:{
+    backgroundColor: '#3066a3',
+    marginBottom: 20,
+    borderRadius: 20,
+    alignItems: 'center',
+    elevation: 2,
+    paddingBottom: 10,
+    paddingTop: 10,
+    opacity: 0.6
+  },
+
+  trainModelButtonPressed:{
+    backgroundColor: '#3066a3',
+    elevation: 1,
+    opacity: 1
+  },
+
+  buttonText: {
     fontSize: 20,
     fontWeight: '900'
   },
