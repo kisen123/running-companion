@@ -3,10 +3,12 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { computer_LAN_IP, hosting_port } from '@env';
 
-import CurrentWeather from '../../components/clotheschooser/CurrentWeather.jsx'; // Adjust the import path as necessary
+import CurrentWeather, { getRandomWeather } from '../../components/clotheschooser/CurrentWeather.jsx'; // Adjust the import path as necessary
 import ClothesPerCategory from '../../components/clotheschooser/ClothesPerCategory.jsx'; // Adjust the import path as necessary}
 
 const Clotheschooser = () => {
+
+  
 
   const fetch_clothes = async (category) => {
 
@@ -34,10 +36,16 @@ const Clotheschooser = () => {
 
   }
 
-  const add_training_data = async (selectedImages) => {
+  const add_training_data = async (selectedImages, weather) => {
 
     try {
-      const response = await axios.post(`http://${computer_LAN_IP}:${hosting_port}/api/training_data`, { training_data: selectedImages });
+
+      // Constructing the training data payload
+      const training_data_payload = {
+        "training_data": { "features": weather, "labels": selectedImages }
+      }
+
+      const response = await axios.post(`http://${computer_LAN_IP}:${hosting_port}/api/training_data`, training_data_payload);
       console.log('Data sent successfully: ', response.data)
       return response;
     } catch (error) {
@@ -53,21 +61,23 @@ const Clotheschooser = () => {
     try {
 
     
-      
-    // TODO: Implement the logic to handle the press out event
-    // This function will send of the selected images to the backend 
+    // Sends of training data to the backend
+    add_training_data(selectedImagesReal, weather);
 
-    add_training_data(selectedImages);
-
-
-    
-    // Resetting the selected images to null for all categories
-    setSelectedImages({
-      'Hats': null,
-      'Upper body': null,
-      'Leggings': null,
-      'Socks': null,
+    // Resets the selected images and weather
+    // TODO: Collect this information model from the back end in a future version
+    setSelectedImagesReal({
+      'gloves': null,
+      'hats': null,
+      'leggings': null,
+      'running_jackets': null,
+      'shoes': null,
+      'snoods': null,
+      'upper_bodies': null
     });
+    setWeather(getRandomWeather());
+    
+
     } 
     catch (error) {
       console.error('Error sending data to backend: ', error);
@@ -76,46 +86,12 @@ const Clotheschooser = () => {
 
   }
 
-  
+  /* Instantiating some important React hooks */
+  //
+  //
+  const [clothesCategories, setClothesCategories] = useState([])
 
-  /*
-  clothes_categories.map(category => {
-    console.log(category)
-  })
-    */
-
-  const hat_images = [
-    { id: '7', source: require('../../assets/test_imgs/hats/hat_1.jpg') },
-    { id: '8', source: require('../../assets/test_imgs/hats/hat_2.jpg') },
-    { id: '9', source: require('../../assets/test_imgs/hats/hat_1.jpg') },
-    { id: '10', source: require('../../assets/test_imgs/hats/hat_2.jpg') },
-  ];
-
-
-  const upper_body_images = [
-    { id: '1', source: require('../../assets/test_imgs/upper_body/t_shirt_1.jpg') },
-    { id: '2', source: require('../../assets/test_imgs/upper_body/t_shirt_2.png') },
-  ];
-
-    const leggings_images = [
-    { id: '3', source: require('../../assets/test_imgs/leggings/leggings_1.png') },
-    { id: '4', source: require('../../assets/test_imgs/leggings/leggings_2.jpg') },
-  ];
-
-  const socks_images = [
-    { id: '5', source: require('../../assets/test_imgs/socks/socks_1.jpg') },
-    { id: '6', source: require('../../assets/test_imgs/socks/socks_2.jpg') },
-  ];
-
-    const gloves_images = [
-    { id: '7', source: require('../../assets/test_imgs/socks/socks_1.jpg') },
-    { id: '8', source: require('../../assets/test_imgs/socks/socks_2.jpg') },
-  ];
-
-
-  const [clothesCategories, setClothesCategories] = useState([]);
-
-
+  // TODO for future version - collect this information model from the back end.
   const [selectedImagesReal, setSelectedImagesReal] = React.useState({
     'gloves': null,
     'hats': null,
@@ -126,21 +102,13 @@ const Clotheschooser = () => {
     'upper_bodies': null
   });
 
+  
+  const [weather, setWeather] = React.useState(getRandomWeather());
 
-  const [selectedImages, setSelectedImages] = React.useState({
-    'Hats': null,
-    'Upper body': null,
-    'Leggings': null,
-    'Socks': null,
-  });
+  //
+  //
+  /* Instantiating some important React hooks */
 
-  // Handler to update the selected image for a category
-  const handleSelectImage = (category, imageId) => {
-    setSelectedImages(prev => ({
-      ...prev,
-      [category]: imageId
-    }));
-  };
 
     // Handler to update the selected image for a category
   const handleSelectImageReal = (category, imageId) => {
@@ -150,9 +118,10 @@ const Clotheschooser = () => {
     }));
   };
 
+  
 
   
-  // On mount, we fetch the clothes from the back end
+  // On mount, we fetch the clothes image metadata from the back end
   useEffect(() => {
 
     // Function definition
@@ -172,35 +141,29 @@ const Clotheschooser = () => {
 
   }, [])
   
-  const testclothesCategories = {'category_id': '3', 'image_category': 'leggings', 'images': [
-    {'image_id': '6', 'image_url': '../../assets/test_imgs/hats/hat_1.jpg'},
-    {'image_id': '7', 'image_url': 'https://media.istockphoto.com/id/2202835351/photo/delicate-pink-tulips-on-pastel-nature-background-romantic-spring-art-background-floral.jpg?s=612x612&w=0&k=20&c=kCncpershJ0CrjiFtcMocBfP1nbiEA0SFv1-szl3KgM='},
-    {'image_id': '8', 'image_url': 'https://media.istockphoto.com/id/2149064798/photo/young-redhaired-woman-drinking-wine-while-sitting-dressed-like-warrior-knight-and-holds-sword.jpg?s=612x612&w=0&k=20&c=Ya0dwrwSM1PivZ6ypqqM6TQMTQG3LNek6G62BqXzg5o='},
-    {'image_id': '9', 'image_url': 'https://media.istockphoto.com/id/1654916078/photo/abstract-rough-colorful-multicolored-art-on-canvas.jpg?s=612x612&w=0&k=20&c=FkDhu7HQlX4q84mJHCxpagHHSi58CFpQWUl2tfrteV0='},
-    {'image_id': '10', 'image_url': 'https://media.istockphoto.com/id/2192855167/photo/man-walking-past-art-installation-in-medical-office-waiting-room.jpg?s=612x612&w=0&k=20&c=g4mq6cxJhUS-pCexEfN1laK-GaaTQX_fUoRIKTSYuec='},
-    {'image_id': '11', 'image_url': 'https://media.istockphoto.com/id/1281239111/photo/seamless-geometric-triangle-pattern-background.jpg?s=612x612&w=0&k=20&c=ouXb-Pynnsm4-kTsyXv9wbag3v2UHfJ_6dZXRSLFwik='},
-    {'image_id': '12', 'image_url': 'https://media.istockphoto.com/id/868355394/vector/flat-line-icon.jpg?s=612x612&w=0&k=20&c=cV84bHZXYPH14yHwpC0w3f1qjETjVf6Id7ogyRhixLc='},
-    {'image_id': '13', 'image_url': 'https://media.istockphoto.com/id/1323655436/photo/abstract-art-collage-of-young-woman-with-flowers.jpg?s=612x612&w=0&k=20&c=3Ze9afSAoZgQnS0Iwct5KeF_RLMLn4LE4n-yULOcqas='},
-    {'image_id': '14', 'image_url': 'https://media.istockphoto.com/id/814423752/photo/eye-of-model-with-colorful-art-make-up-close-up.jpg?s=612x612&w=0&k=20&c=l15OdMWjgCKycMMShP8UK94ELVlEGvt7GmB_esHWPYE='},
-    {'image_id': '15', 'image_url': 'https://media.istockphoto.com/id/622070470/photo/edgy-expressions-of-beauty.jpg?s=612x612&w=0&k=20&c=-UqbeujGAySYdZhbcFuscW4PtJSwlpiButI2eGslFpA='},
-    {'image_id': '16', 'image_url': 'https://media.istockphoto.com/id/1138395421/photo/blue-abstract-background-or-texture.jpg?s=612x612&w=0&k=20&c=D3zwS1YZx-qR1GTo2PSqoWvak_Dm4uyvITpLgmaGxtc='},
-    {'image_id': '17', 'image_url': 'https://media.istockphoto.com/id/1999938268/photo/a-chip-labeled-ai-in-the-middle-of-metal-components.jpg?s=612x612&w=0&k=20&c=WiOgextBDKrJvJTAR18PIe3EE5aJSQdfqfF-0zoY7rw='}
-    ]}
   
 
   return (
     <View style={styles.clothesChooserWrapper}>
 
-      <CurrentWeather />
+      <CurrentWeather weather={weather} setWeather={setWeather} />
 
       <ScrollView  showsHorizontalScrollIndicator={false} contentContainerStyle= {{ paddingBottom: 140 }}>
 
-      <ClothesPerCategory 
-        key={testclothesCategories?.image_category}
-        categoryName={testclothesCategories?.image_category} 
-        images={testclothesCategories?.images} 
-        selectedImageId={selectedImagesReal[testclothesCategories?.image_category]} 
-        onSelectImage={handleSelectImageReal} />
+        {/* Looping through the different clothing categories */}
+        {
+          clothesCategories.map(clothesCategory => {
+          return (
+          <ClothesPerCategory 
+            key={clothesCategory?.image_category}
+            categoryName={clothesCategory?.image_category} 
+            images={clothesCategory?.images} 
+            selectedImageId={selectedImagesReal[clothesCategory?.image_category]} 
+            onSelectImage={handleSelectImageReal} />
+          )
+          })
+        }
+
 
 
       </ScrollView>

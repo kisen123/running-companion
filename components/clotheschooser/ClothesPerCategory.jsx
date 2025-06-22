@@ -9,7 +9,12 @@ const ClothesPerCategory = ({ categoryName, images, selectedImageId, onSelectIma
     console.log(item.image_url)
     return (
     <TouchableOpacity
-      onPress={() => onSelectImage(categoryName, item.image_id)}
+      onPress={() => {
+        
+        // Handling pressing the same image twice, setting it back to null
+        selectedImageId === item.image_id ? onSelectImage(categoryName, null) : onSelectImage(categoryName, item.image_id)
+        
+      }}
       style={styles.itemContainer}
       activeOpacity={0.8}
       >
@@ -36,9 +41,6 @@ const ClothesPerCategory = ({ categoryName, images, selectedImageId, onSelectIma
           renderItem={renderItem}
           horizontal={true}
           showsHorizontalScrollIndicator={false}
-          maxToRenderPerBatch={5}
-          windowSize={5}
-          initialNumToRender={5}
         />
     </View>
   );
