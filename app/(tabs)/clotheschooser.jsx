@@ -1,5 +1,5 @@
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import React, { useState, useEffect } from 'react';
+import { Pressable, ScrollView, StyleSheet, Text, View, Animated } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { computer_LAN_IP, hosting_port } from '@env';
 
@@ -59,7 +59,16 @@ const Clotheschooser = () => {
   const handlePressOut = async (props) => {
 
     try {
-
+      // Show "+1" animation
+      setShowPlusOne(true);
+      plusOneAnim.setValue(0);
+      Animated.timing(plusOneAnim, {
+        toValue: 1,
+        duration: 900,
+        useNativeDriver: true,
+      }).start(() => {
+        setShowPlusOne(false);
+      });
     
     // Sends of training data to the backend
     add_training_data(selectedImagesReal, weather);
@@ -104,6 +113,10 @@ const Clotheschooser = () => {
 
   
   const [weather, setWeather] = React.useState(getRandomWeather());
+
+  // Animation state for "+1"
+  const plusOneAnim = useRef(new Animated.Value(0)).current; // 0: hidden, 1: visible
+  const [showPlusOne, setShowPlusOne] = useState(false);
 
   //
   //
@@ -170,9 +183,34 @@ const Clotheschooser = () => {
       
 
       <View style={styles.addTrainingDataButtonContainer}>
+        {showPlusOne && (
+          <Animated.View
+            style={[
+              styles.plusOneContainer,
+              {
+                opacity: plusOneAnim.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [1, 0],
+                }),
+                transform: [
+                  {
+                    translateY: plusOneAnim.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [0, -40], // Slide up 40px
+                    }),
+                  },
+                ],
+              },
+            ]}
+            pointerEvents="none"
+          >
+            <Text style={styles.plusOneText}>+1</Text>
+          </Animated.View>
+        )}
         <Pressable style={({ pressed }) => [styles.addTrainingDataButton, pressed && styles.addTrainingDataButtonPressed]} onPressOut={handlePressOut} title="Button title">
           <Text style={styles.addTrainingDataButtonText}>Add training data</Text>
         </Pressable>
+
       </View>
 
     </View>
@@ -221,5 +259,23 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     paddingBottom: 60, // Optional: adds space at top and bottom
   },
+
+    // ...existing styles...
+  plusOneContainer: {
+    position: 'absolute',
+    left: '30%',
+    bottom: 50,
+    transform: [{ translateX: -10 }],
+    zIndex: 10,
+  },
+  plusOneText: {
+    fontSize: 40,
+    fontWeight: '900',
+    color: '#66bbff',
+    textShadowColor: '#000000',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
+  },
+  // ...existing styles...
 
 })
